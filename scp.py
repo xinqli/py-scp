@@ -16,8 +16,8 @@ ip = ''
 port = 22
 user = 'root'
 password = ''
-localDir = '/Users/admin/project/www/scp'
-serverDir = '/root'
+localDir = '/Users/admin/project/www/charts'
+serverDir = '/www/chart'
 event_handler = FileEventHandler()
 observer.schedule(event_handler, localDir, True)
 observer.start()
@@ -44,15 +44,17 @@ try:
         file_list = event_handler.get_task_list()
         for i in range(0, len(file_list)):
             # print(file_list[i][len(localDir + '\\'):])
+            # 进行文件路径且切片，去掉本地定义文件路径
             file_list[i] = file_list[i][len(localDir + '/'):]
             # print(file_list[i].split('\\'));
-            file = file_list[i].split('/')
-            for j in range(0, len(file)):
-                if '.idea' in file:
-                    print('忽略ide文件')
-                    break
-                print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+'|开始上传:' + localDir + '／' + file[j])
-                upload_to_server(localDir, serverDir, file[j], user, password)
+            fileArr = file_list[i].split('/')
+            # for j in range(0, len(fileArr)):
+            if '.idea' in fileArr:
+                print('忽略ide文件')
+                break
+            print(file_list[i])
+            print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+'|开始上传:' + localDir + '／' + file_list[i])
+            upload_to_server(localDir, serverDir, file_list[i], user, password)
             # print(file)
 except KeyboardInterrupt:
     observer.stop()
